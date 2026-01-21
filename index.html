@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Habit Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            width: 350px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        input {
+            width: 75%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+            margin-left: 5px;
+        }
+
+        .reset-btn {
+            background-color: #f44336;
+            color: white;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        li {
+            background: #f4f4f4;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li.completed {
+            text-decoration: line-through;
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .progress {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Daily Habit Tracker</h1>
+
+    <div>
+        <input type="text" id="habitInput" placeholder="Enter a habit">
+        <button class="add-btn" onclick="addHabit()">Add</button>
+    </div>
+
+    <ul id="habitList"></ul>
+
+    <div class="progress" id="progressText">
+        Progress: 0%
+    </div>
+
+    <button class="reset-btn" onclick="resetHabits()">Reset Day</button>
+</div>
+
+<script>
+    const habitInput = document.getElementById("habitInput");
+    const habitList = document.getElementById("habitList");
+    const progressText = document.getElementById("progressText");
+
+    let habits = [];
+
+    function addHabit() {
+        const habitName = habitInput.value.trim();
+        if (habitName === "") return;
+
+        habits.push({ name: habitName, completed: false });
+        habitInput.value = "";
+        renderHabits();
+    }
+
+    function toggleHabit(index) {
+        habits[index].completed = !habits[index].completed;
+        renderHabits();
+    }
+
+    function renderHabits() {
+        habitList.innerHTML = "";
+
+        habits.forEach((habit, index) => {
+            const li = document.createElement("li");
+            li.textContent = habit.name;
+            if (habit.completed) li.classList.add("completed");
+
+            li.addEventListener("click", () => toggleHabit(index));
+            habitList.appendChild(li);
+        });
+
+        updateProgress();
+    }
+
+    function updateProgress() {
+        if (habits.length === 0) {
+            progressText.textContent = "Progress: 0%";
+            return;
+        }
+
+        const completedCount = habits.filter(h => h.completed).length;
+        const percent = Math.round((completedCount / habits.length) * 100);
+        progressText.textContent = `Progress: ${percent}%`;
+    }
+
+    function resetHabits() {
+        habits = [];
+        habitList.innerHTML = "";
+        progressText.textContent = "Progress: 0%";
+    }
+</script>
+
+</body>
+</html>
